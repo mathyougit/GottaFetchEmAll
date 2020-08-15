@@ -34,8 +34,8 @@ const NewTrainer = (props) => {
       .then((data) => {
         // console.log(data)
         localStorage.setItem('pokemonTrainerId', data._id)
-        setNewTrainerSubmitted(true);
         setTrainer(data);
+        setNewTrainerSubmitted(true);
         setInput('');
         return data;
       })
