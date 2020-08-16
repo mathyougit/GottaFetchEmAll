@@ -1,6 +1,7 @@
 import React from 'react';
 import NewTrainer from '../Components/NewTrainer/NewTrainer';
 import WelcomeMessage from '../Components/WelcomeMessage/WelcomeMessage';
+import NewPack from '../Components/NewPack/NewPack';
 
 class Main extends React.Component {
   constructor(props) {
@@ -50,6 +51,26 @@ class Main extends React.Component {
     })
   }
 
+  handleNewPack = () => {
+    fetch(`https://gottafetchemall.herokuapp.com/trainer/${this.state.trainer._id}`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json'
+        },
+        method: 'GET'
+      }
+    )
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      this.setState({
+        trainer: data,
+      })
+    })
+  }
+
   // State control? What if user manually changes state. How to prevent this from making changes
   // Make the new trainer section a function / or component
   // Make component for rendering pokemon and sprite
@@ -68,6 +89,7 @@ class Main extends React.Component {
           />
         }
         {
+          // can group all three of the below components to show up if this.state.trainer exists
           this.state.trainer &&
           <WelcomeMessage
           newOrReturningTrainer={this.state.newTrainerSubmitted ? 'new' : 'returning'}
@@ -76,12 +98,25 @@ class Main extends React.Component {
         }
 
 
-
-
-
-
-
         {
+          this.state.trainer &&
+          <div className='new-pack-section'>
+          <NewPack
+            trainerId={this.state.trainer._id}
+            packType={'basic'}
+            packPrice={1}
+            handleNewPack={this.handleNewPack}
+          />
+          <NewPack
+            trainerId={this.state.trainer._id}
+            packType={'premium'}
+            packPrice={2}
+            handleNewPack={this.handleNewPack}
+          />
+          </div>
+        }
+        {
+          // turn this into component
           this.state.trainer &&  
           <div className='trainer-pokemon-collection'>
             Have a look at your Pokemon! <br />
