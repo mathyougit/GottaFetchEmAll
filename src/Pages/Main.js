@@ -1,6 +1,6 @@
 import React from 'react';
-import NewTrainer from './Components/NewTrainer/NewTrainer';
-import WelcomeMessage from './Components/WelcomeMessage/WelcomeMessage';
+import NewTrainer from '../Components/NewTrainer/NewTrainer';
+import WelcomeMessage from '../Components/WelcomeMessage/WelcomeMessage';
 
 class Main extends React.Component {
   constructor(props) {
@@ -42,6 +42,7 @@ class Main extends React.Component {
   }
 
   handleNewTrainer = ({newTrainerNeededChange, newTrainerSubmittedChange, newTrainer}) => {
+    localStorage.setItem('pokemonTrainerId', newTrainer._id)
     this.setState({
       newTrainerNeeded: newTrainerNeededChange,
       newTrainerSubmitted: newTrainerSubmittedChange,
