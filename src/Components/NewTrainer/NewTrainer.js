@@ -2,21 +2,23 @@ import React, { useState } from 'react'
 // import any css for this section
 
 const NewTrainer = (props) => {
-  const [input, setInput] = useState('')
-  const [newTrainerNeededError, setNewTrainerNeededError] = useState('')
-  const [newTrainerSubmitted, setNewTrainerSubmitted] = useState(false);
-  const [trainer, setTrainer] = useState(null) // is this needed in this functional component or the parent?
-  const [newPack, setNewPack] = useState([])
+
+  const handleNewTrainer = (newTrainer) => {
+    props.handleNewTrainer({ newTrainerNeededChange: false, newTrainerSubmittedChange: true, newTrainer })
+  };
+
+  const [newTrainerInput, setNewTrainerInput] = useState('');
+  const [newTrainerInputError, setNewTrainerInputError] = useState('');
 
   const handleChange = e => {
-   setInput(e.target.value);
+    setNewTrainerInput(e.target.value);
   }
 
   const handleClick = () => {
-    if (!/^[a-z0-9]+$/i.test(input)) {
-      setNewTrainerNeededError(`Invalid Name: ${input}. Please only use alphanumeric characters for your trainer name.`);
-      setInput('');
-      return
+    if (!/^[a-z0-9]+$/i.test(newTrainerInput)) {
+      setNewTrainerInputError(`Invalid Name: ${newTrainerInput}. Please only use alphanumeric characters for your trainer name.`);
+      setNewTrainerInput('');
+      return;
     }
     fetch('https://gottafetchemall.herokuapp.com/trainer',
       {
@@ -25,48 +27,47 @@ const NewTrainer = (props) => {
           'Content-type': 'application/json'
         },
         method: 'POST',
-        body: JSON.stringify({ name: input })
+        body: JSON.stringify({ name: newTrainerInput })
       }
     )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        // console.log(data)
-        localStorage.setItem('pokemonTrainerId', data._id)
-        setTrainer(data);
-        setNewTrainerSubmitted(true);
-        setInput('');
-        return data;
-      })
-      .then((data) => {
-        return fetch('https://gottafetchemall.herokuapp.com/pokeCollection/pack',
-          {
-            headers: {
-              'Accept': 'application/json',
-              'Content-type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify({
-              trainerId: data._id,
-              packType: 'starter'
-            })
-          }
-        )
-      }
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      fetch('https://gottafetchemall.herokuapp.com/pokeCollection/pack',
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            trainerId: data._id,
+            packType: 'starter'
+          })
+        }
       )
-      .then((response) => {
-        return response.json();
+     return data
+    })
+    .then((data) => {
+      return fetch(`https://gottafetchemall.herokuapp.com/trainer/${data._id}`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json'
+        },
+        method: 'GET'
       })
-      .then((data) => {
-        setNewPack(data.map(pokemon => {
-          return pokemon.sprite;
-        }));
-      })
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((data) => {
+      handleNewTrainer(data)})
   }
 
   const handleKeyDown = e => {
-    if (e.key === 'Enter' && input) {
+    if (e.key === 'Enter' && newTrainerInput) {
       handleClick();
     }
   }
@@ -74,41 +75,31 @@ const NewTrainer = (props) => {
   return (
     <>
       {
-        !newTrainerSubmitted &&
         <div className='new-trainer-needed-section'>
           <div className='new-trainer-needed-message'> Do you want to be the very best, the best there ever was? <br />
-          Get started by entering your pokemon trainer name.
+          Get started by entering your pokemon trainer name. <br />
+          Dont worry. We will start you off with some Pokemon to get you ready!
         </div>
           {
-            newTrainerNeededError &&
-            <div className='new-trainer-needed-error'>
-              {newTrainerNeededError}
+            newTrainerInputError &&
+            <div className='new-trainer-input-error'>
+              {newTrainerInputError}
             </div>
           }
           <input className='new-trainer-input-input'
             onChange={handleChange}
             type='text'
-            value={input}
+            value={newTrainerInput}
             placeHolder='Enter Trainer Name'
             onKeyDown={handleKeyDown}
           />
           <button className='new-trainer-input-button'
             onClick={handleClick}
-            // do we need trainer?
-            disabled={!input || !!trainer}
+            disabled={!newTrainerInput}
           >
             Enter
         </button>
         </div>
-      }
-      {
-        newTrainerSubmitted &&
-        <div className='new-trainer-created-welcome'>
-          Welcome, <b>{trainer.name}</b>!<br />
-        We've given you a starter pack of Pokemon to get you ready! Have a look.<br />
-          {newPack.map(sprite => { return <img src={sprite}></img> })} <br />
-        Now go, go and catch those Pokemon!
-      </div>
       }
     </>
   )

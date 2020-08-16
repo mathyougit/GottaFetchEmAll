@@ -1,5 +1,6 @@
 import React from 'react';
-import NewTrainer from './Components/NewTrainer/NewTrainer'
+import NewTrainer from './Components/NewTrainer/NewTrainer';
+import WelcomeMessage from './Components/WelcomeMessage/WelcomeMessage';
 
 class Main extends React.Component {
   constructor(props) {
@@ -17,7 +18,6 @@ class Main extends React.Component {
   componentDidMount() {
     const returningTrainerId = localStorage.getItem('pokemonTrainerId');
     const newTrainerNeeded = !returningTrainerId ? true : false;
-    // this state change will tell the new trainer section to render
     newTrainerNeeded && this.setState(() => ({
       newTrainerNeeded,
     }))
@@ -35,14 +35,19 @@ class Main extends React.Component {
         return response.json();
       })
       .then((data) => {
-        console.log(data)
-    // this state change will tell the returning trainer section to render
         this.setState(() => ({
           trainer: data,
         }))
       })
   }
- 
+
+  handleNewTrainer = ({newTrainerNeededChange, newTrainerSubmittedChange, newTrainer}) => {
+    this.setState({
+      newTrainerNeeded: newTrainerNeededChange,
+      newTrainerSubmitted: newTrainerSubmittedChange,
+      trainer: newTrainer,
+    })
+  }
 
   // State control? What if user manually changes state. How to prevent this from making changes
   // Make the new trainer section a function / or component
@@ -55,20 +60,33 @@ class Main extends React.Component {
   render() {
     return (
       <div className='main'>
-        
         {
           this.state.newTrainerNeeded &&
-          <NewTrainer/>
+          <NewTrainer 
+          handleNewTrainer={this.handleNewTrainer}
+          />
         }
         {
-          !this.state.newTrainerSubmitted && this.state.trainer &&
-          <div className='returning-trainer-welcome'>
-            Welcoem Back, <b>{this.state.trainer.name}</b>!<br/>
-            Have a look at your Pokemon! <br/>
+          this.state.trainer &&
+          <WelcomeMessage
+          newOrReturningTrainer={this.state.newTrainerSubmitted ? 'new' : 'returning'}
+          trainerName={this.state.trainer.name}
+          />
+        }
+
+
+
+
+
+
+
+        {
+          this.state.trainer &&  
+          <div className='trainer-pokemon-collection'>
+            Have a look at your Pokemon! <br />
             {this.state.trainer.pokecollection.pokemons.map(pokemon => { return <img src={pokemon.sprite}></img> })}
           </div>
         }
-
       </div>
     );
   };
