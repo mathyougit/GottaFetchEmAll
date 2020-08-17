@@ -75,11 +75,11 @@ const NewTrainer = (props) => {
   return (
     <>
       {
-        <div className='new-trainer-needed-section'>
-          <div className='new-trainer-needed-message'> Do you want to be the very best, the best there ever was? <br />
+        <div className='new-trainer-section'>
+          <div className='new-trainer-message'> Do you want to be the very best, the best there ever was? <br />
           Get started by entering your pokemon trainer name. <br />
           Dont worry. We will start you off with some Pokemon to get you ready!
-        </div>
+          </div>
           {
             newTrainerInputError &&
             <div className='new-trainer-input-error'>
