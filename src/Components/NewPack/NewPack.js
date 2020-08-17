@@ -2,8 +2,8 @@ import React from 'react';
 
 const NewPack = (props) => {
 
-  const handleNewPack = () => {
-    props.handleNewPack()
+  const handleNewPack = (updateTrainerData) => {
+    props.handleNewPack(updateTrainerData)
   }
 
   const trainerId = props.trainerId;
@@ -11,7 +11,7 @@ const NewPack = (props) => {
   const packPrice = props.packPrice;
 
   const handleOnClick = () => {
-    return fetch('https://gottafetchemall.herokuapp.com/pokeCollection/pack',
+    fetch('https://gottafetchemall.herokuapp.com/pokeCollection/pack',
       {
         headers: {
           'Accept': 'application/json',
@@ -27,21 +27,35 @@ const NewPack = (props) => {
     .then((response) => {
       return response.json();
     })
-    .then((data) => {
-      handleNewPack()
-    // do something wit hthe data here, probably to show the new pack pokemon
+    .then((packData) => {
+      console.log(packData);
+      return fetch(`https://gottafetchemall.herokuapp.com/trainer/${trainerId}`,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
+          },
+          method: 'GET'
+        }
+      )
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((updateTrainerData) => {
+      handleNewPack(updateTrainerData);
     })
   }
 
-return (
-  <div className={`new-pack-section-${packType}`}>
-    <div className='new-pack-cost'>{packPrice}</div>
-    <button className='new-pack-button'
-      onClick={handleOnClick}>
-      {packType}
-    </button>
-  </div>
-)
+  return (
+    <div className={`new-pack-section-${packType}`}>
+      <div className='new-pack-cost'>{packPrice}</div>
+      <button className='new-pack-button'
+        onClick={handleOnClick}>
+        {packType}
+      </button>
+    </div>
+  )
 
 }
 

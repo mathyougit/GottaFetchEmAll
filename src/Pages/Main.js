@@ -43,40 +43,25 @@ class Main extends React.Component {
   }
 
   handleNewTrainer = ({ newTrainerNeededChange, newTrainerSubmittedChange, newTrainer }) => {
-    localStorage.setItem('pokemonTrainerId', newTrainer._id)
     this.setState({
       newTrainerNeeded: newTrainerNeededChange,
       newTrainerSubmitted: newTrainerSubmittedChange,
       trainer: newTrainer,
     })
+    localStorage.setItem('pokemonTrainerId', newTrainer._id);
   }
 
-  handleNewPack = () => {
-    fetch(`https://gottafetchemall.herokuapp.com/trainer/${this.state.trainer._id}`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json'
-        },
-        method: 'GET'
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        this.setState({
-          trainer: data,
-        })
-      })
+  handleNewPack = (updateTrainerData) => {
+    this.setState({
+      trainer: updateTrainerData,
+    })
   }
 
-  // State control? What if user manually changes state. How to prevent this from making changes
-  // click on pokemon sprite to evolve
-  // sort methods: rarity, alphabetical, num of same pokemon
-  // ctrl-s to sort sa for alpha, r by rarity
-  // pokedex facts for user
-  // could highlight pokemon from new pack
+  handleSortedTrainer = (sortedTrainer) => {
+    this.setState({
+      trainer: sortedTrainer,  
+    })
+  }
 
   render() {
     return (
@@ -110,7 +95,8 @@ class Main extends React.Component {
               />
             </div>
             <TrainerCollection
-              pokemons={this.state.trainer.pokecollection.pokemons}
+              trainer={this.state.trainer}
+              handleSortedTrainer={this.handleSortedTrainer}
             />
           </div>
         }
@@ -119,5 +105,12 @@ class Main extends React.Component {
   };
 
 };
+
+  // State control? What if user manually changes state. How to prevent this from making changes
+  // click on pokemon sprite to evolve
+  // sort methods: rarity, alphabetical, num of same pokemon
+  // ctrl-s to sort sa for alpha, r by rarity
+  // pokedex facts for user
+  // could highlight pokemon from new pack
 
 export default Main;

@@ -2,14 +2,22 @@ import React, { useState } from 'react';
 import './TrainerCollection.css'
 
 const TrainerCollection = (props) => {
-  const [pokemons, setPokemons] = useState(props.pokemons);
+
+  const trainer = props.trainer;
+  const pokemons = trainer.pokecollection.pokemons;
+  
+  const handleSortedTrainer = (sortedTrainer) => {
+     props.handleSortedTrainer(sortedTrainer)
+  }
+
   const [sortType, setSortType] = useState('nameAZ');
 
-  const handleSortChange = e => {
+  const handleSortTypeChange = e => {
     setSortType(e.target.value);
   }
 
   const handleSort = () => {
+
     const sortedPokemons = [...pokemons];
     
     const compareNameAZ = (a,b) => {
@@ -50,15 +58,18 @@ const TrainerCollection = (props) => {
       sortedPokemons.sort( compareRarityDsc )
     }
 
-    setPokemons(sortedPokemons)
+    const sortedTrainer = {...trainer};
+    sortedTrainer.pokecollection.pokemons = sortedPokemons;
+    
+    handleSortedTrainer(sortedTrainer)
   }
 
   return(
     <div className='trainer-collection'>
       Have a look at your Pokemon! <br />
-      <select 
+      <select className='trainer-collection-sort-type'
         value={sortType} 
-        onChange={handleSortChange}>
+        onChange={handleSortTypeChange}>
         <option value='nameAZ'>By Name; A-Z</option>
         <option value='nameZA'>By Name; Z-A</option>
         <option value='pokeIdAsc'>By Pokedex Id; Ascending</option>
@@ -66,8 +77,7 @@ const TrainerCollection = (props) => {
         <option value='rarityAsc'>By Rarity; Ascending</option>
         <option value='rarityDsc'>By Rarity; Descending</option>
       </select>
-
-      <button className='trainer-collection-sort'
+      <button className='trainer-collection-sort-button'
         onClick={handleSort}
       >
       Sort Collection

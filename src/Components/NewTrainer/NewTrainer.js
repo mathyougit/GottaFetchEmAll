@@ -47,7 +47,7 @@ const NewTrainer = (props) => {
           })
         }
       )
-     return data
+     return data;
     })
     .then((data) => {
       return fetch(`https://gottafetchemall.herokuapp.com/trainer/${data._id}`,
@@ -62,8 +62,9 @@ const NewTrainer = (props) => {
     .then((response) => {
       return response.json()
     })
-    .then((data) => {
-      handleNewTrainer(data)})
+    .then((newTrainer) => {
+      handleNewTrainer(newTrainer);
+    })
   }
 
   const handleKeyDown = e => {
@@ -78,7 +79,6 @@ const NewTrainer = (props) => {
         <div className='new-trainer-section'>
           <div className='new-trainer-message'> Do you want to be the very best, the best there ever was? <br />
           Get started by entering your pokemon trainer name. <br />
-          Dont worry. We will start you off with some Pokemon to get you ready!
           </div>
           {
             newTrainerInputError &&
