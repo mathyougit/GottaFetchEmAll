@@ -13,7 +13,6 @@ class Main extends React.Component {
       newTrainerNeeded: false,
       newTrainerSubmitted: false,
       trainer: null,
-      newPack: []
     }
   }
 
@@ -73,12 +72,11 @@ class Main extends React.Component {
   }
 
   // State control? What if user manually changes state. How to prevent this from making changes
-  // Make the new trainer section a function / or component
-  // Make component for rendering pokemon and sprite
   // click on pokemon sprite to evolve
   // sort methods: rarity, alphabetical, num of same pokemon
   // ctrl-s to sort sa for alpha, r by rarity
   // pokedex facts for user
+  // could highlight pokemon from new pack
 
   render() {
     return (
@@ -92,7 +90,7 @@ class Main extends React.Component {
         {
           this.state.trainer &&
           <div className='trainer-section'>
-          <WelcomeMessage
+            <WelcomeMessage
               newOrReturningTrainer={this.state.newTrainerSubmitted ? 'new' : 'returning'}
               trainerName={this.state.trainer.name}
             />
@@ -112,7 +110,7 @@ class Main extends React.Component {
               />
             </div>
             <TrainerCollection
-              pokeCollection={this.state.trainer.pokecollection}
+              pokemons={this.state.trainer.pokecollection.pokemons}
             />
           </div>
         }
