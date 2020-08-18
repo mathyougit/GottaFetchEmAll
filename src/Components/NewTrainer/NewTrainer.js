@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 
 const NewTrainer = (props) => {
 
+  // do not need newTrainerSubmittedChange anymore
+
   const handleNewTrainer = (newTrainer) => {
     props.handleNewTrainer({ newTrainerNeededChange: false, newTrainerSubmittedChange: true, newTrainer })
   };

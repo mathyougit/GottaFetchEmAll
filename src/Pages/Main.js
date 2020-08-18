@@ -16,6 +16,8 @@ class Main extends React.Component {
     }
   }
 
+    // do not need newTrainerSubmitted anymore
+
   componentDidMount() {
     const returningTrainerId = localStorage.getItem('pokemonTrainerId');
     const newTrainerNeeded = !returningTrainerId ? true : false;
@@ -41,6 +43,8 @@ class Main extends React.Component {
         }))
       })
   }
+
+    // do not need newTrainerSubmittedChange anymore
 
   handleNewTrainer = ({ newTrainerNeededChange, newTrainerSubmittedChange, newTrainer }) => {
     this.setState({
