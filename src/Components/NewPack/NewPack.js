@@ -28,7 +28,6 @@ const NewPack = (props) => {
       return response.json();
     })
     .then((packData) => {
-      console.log(packData);
       return fetch(`https://gottafetchemall.herokuapp.com/trainer/${trainerId}`,
         {
           headers: {

@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 
 const NewTrainer = (props) => {
 
-  // do not need newTrainerSubmittedChange anymore
-
   const handleNewTrainer = (newTrainer) => {
     props.handleNewTrainer({ newTrainerNeededChange: false, newTrainerSubmittedChange: true, newTrainer })
   };
@@ -34,22 +32,6 @@ const NewTrainer = (props) => {
     )
     .then((response) => {
       return response.json();
-    })
-    .then((data) => {
-      fetch('https://gottafetchemall.herokuapp.com/pokeCollection/pack',
-        {
-          headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json'
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            trainerId: data._id,
-            packType: 'starter'
-          })
-        }
-      )
-     return data;
     })
     .then((data) => {
       return fetch(`https://gottafetchemall.herokuapp.com/trainer/${data._id}`,

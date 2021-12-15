@@ -83,10 +83,12 @@ const TrainerCollection = (props) => {
       Sort Collection
       </button>
       <div className='trainer-collection-pokemons'>
-      {pokemons.map(pokemon => { 
+      {pokemons.map((pokemon, index) => { 
         return (
-          <div className='trainer-collection-pokemon'>
-            <img src={pokemon.sprite}></img>
+          <div className='trainer-collection-pokemon'
+            key={pokemon.name + index}
+          >
+            <img src={pokemon.sprite} alt={pokemon.name}></img>
             <div>{pokemon.name}</div>
           </div>          
         ) 

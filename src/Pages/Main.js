@@ -3,6 +3,9 @@ import NewTrainer from '../Components/NewTrainer/NewTrainer';
 import WelcomeMessage from '../Components/WelcomeMessage/WelcomeMessage';
 import NewPack from '../Components/NewPack/NewPack';
 import TrainerCollection from '../Components/TrainerCollection/TrainerCollection';
+import TrainerCurrency from '../Components/TrainerCurrency/TrainerCurrency';
+
+const url = process.env.REACT_APP_SERVER;
 
 class Main extends React.Component {
   constructor(props) {
@@ -16,8 +19,6 @@ class Main extends React.Component {
     }
   }
 
-    // do not need newTrainerSubmitted anymore
-
   componentDidMount() {
     const returningTrainerId = localStorage.getItem('pokemonTrainerId');
     const newTrainerNeeded = !returningTrainerId ? true : false;
@@ -25,7 +26,7 @@ class Main extends React.Component {
       newTrainerNeeded,
     }))
 
-    !newTrainerNeeded && fetch(`https://gottafetchemall.herokuapp.com/trainer/${returningTrainerId}`,
+    !newTrainerNeeded && fetch(`${url}/trainer/${returningTrainerId}`,
       {
         headers: {
           'Accept': 'application/json',
@@ -67,6 +68,12 @@ class Main extends React.Component {
     })
   }
 
+  handleTrainerCurrency = (updatedTrainerData) => {
+    this.setState({
+      trainer: updatedTrainerData,
+    })
+  }
+
   render() {
     return (
       <div className='main'>
@@ -83,6 +90,14 @@ class Main extends React.Component {
               newOrReturningTrainer={this.state.newTrainerSubmitted ? 'new' : 'returning'}
               trainerName={this.state.trainer.name}
             />
+            <div className='trainer-currency-section'>
+              You currently have {this.state.trainer.currency} currency.
+              <TrainerCurrency
+                trainerId={this.state.trainer._id}
+                currency={5}
+                handleTrainerCurrency={this.handleTrainerCurrency}
+            />
+            </div>
             <div className='new-pack-section'>
               Add more Pokemon to your collection in order to <i>fetch them all</i>!
               <NewPack
